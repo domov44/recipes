@@ -1,12 +1,5 @@
-<p>home works!</p>
-<a href="/about">Go to About</a>
-<app-button>
-  le contenu
-</app-button>
-<div *ngIf="data$ | async as data">
-  <ul>
-    <li *ngFor="let meal of data.meals">
-      {{ meal.strMeal }}
-    </li>
-  </ul>
-</div>
+<div *ngIf="error" style="color: red;">{{ error }}</div>
+
+<app-hero-background-image *ngIf="page" [title]="page.title" [description]="page.datapage?.description"
+  [link]="page.datapage?.link" [featuredImage]="page.featuredImage">
+</app-hero-background-image>

@@ -1,6 +1,9 @@
-<nav>
-  <a routerLink="/">Home</a>
-  <a routerLink="/about">About</a>
+<nav class="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center shadow-sm z-50">
+  <div class="flex space-x-4">
+    <a routerLink="/" class="text-gray-700 hover:text-indigo-600 font-semibold">Home</a>
+    <a routerLink="/about" class="text-gray-700 hover:text-indigo-600 font-semibold">About</a>
+  </div>
 </nav>
 
 <router-outlet></router-outlet>
+
