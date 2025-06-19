@@ -24,7 +24,6 @@ export class DefaultLayoutComponent implements OnInit {
   async ngOnInit() {
     try {
       const rawMenu = await this.menuService.getHeader();
-      console.log(rawMenu);
       this.menu = buildMenuStructure({ menu: { menuItems: rawMenu.menuItems } });
       this.cdr.detectChanges();
     } catch (err) {

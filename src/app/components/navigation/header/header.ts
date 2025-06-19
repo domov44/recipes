@@ -1,4 +1,9 @@
-import { Component, Input, HostListener } from '@angular/core';
+import {
+  Component,
+  Input,
+  HostListener,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from '../../adapters/menu-adapters/menu-adapters';
@@ -11,52 +16,70 @@ import { MenuItem } from '../../adapters/menu-adapters/menu-adapters';
     <nav [class.scrolled]="scrolled" class="fixed w-full top-0 left-0 z-50 transition-colors duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-          <div class="flex-shrink-0 font-bold text-xl" [class.text-white]="!scrolled" [class.text-gray-800]="scrolled">
+          <div class="hidden lg:flex lg:flex-1 lg:items-center font-bold text-xl" [class.text-white]="!scrolled" [class.text-gray-800]="scrolled">
             LOGO
           </div>
           <ul class="hidden md:flex space-x-8">
-            <li *ngFor="let item of menu" class="relative group">
-              <a
-                [routerLink]="item.node.uri"
-                [class.text-white]="!scrolled"
-                [class.text-gray-700]="scrolled"
-                class="inline-flex items-center px-3 py-2 hover:underline transition"
-              >
-                {{ item.node.label }}
-              </a>
-
-              <div
-                *ngIf="item.children?.length"
-                class="absolute left-0 mt-2 w-screen max-w-7xl bg-white border border-gray-200 rounded-md shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-opacity z-10 p-6"
-              >
-                <div class="grid grid-cols-4 gap-6">
-                  <ng-container *ngFor="let child of item.children">
-                    <a
-                      [routerLink]="child.node.uri"
-                      class="block group"
-                    >
-                      <div class="h-32 bg-gray-100 rounded-md overflow-hidden mb-2">
-                        <img
-                          *ngIf="child.node['datamenuitem']?.image?.node?.sourceUrl"
-                          [src]="child.node['datamenuitem'].image.node.sourceUrl"
-                          [alt]="child.node.label"
-                          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div *ngIf="!child.node['datamenuitem']?.image?.node?.sourceUrl" class="w-full h-full flex items-center justify-center text-gray-400">
-                          No Image
+            <li *ngFor="let item of menu; let i = index" [ngClass]="{ 'border-b-2 border-indigo-600': openMegaMenuIndex === i }">
+              <ng-container *ngIf="item.children?.length; else simpleLink">
+                <button
+                  type="button"
+                  (click)="toggleMegaMenu(i)"
+                  class="inline-flex items-center px-3 py-2"
+                  [ngClass]="{
+                    'text-white': !scrolled && openMegaMenuIndex !== i,
+                    'text-gray-700': scrolled && openMegaMenuIndex !== i,
+                    'text-indigo-600': scrolled && openMegaMenuIndex === i,
+                    'text-indigo-300': !scrolled && openMegaMenuIndex === i
+                  }"
+                >
+                  {{ item.node.label }}
+                </button>
+                <div
+                  *ngIf="openMegaMenuIndex === i"
+                  class="absolute inset-x-0 top-full m-4 mt-0 bg-white border border-gray-200 rounded-md shadow-lg z-10 p-6"
+                >
+                  <div class="grid grid-cols-4 gap-6">
+                    <ng-container *ngFor="let child of item.children">
+                      <a [routerLink]="child.node.uri" class="block group">
+                        <div class="aspect-w-1 aspect-h-1 bg-gray-100 rounded-md overflow-hidden mb-2">
+                          <img
+                            *ngIf="child.node['datamenuitem']?.image?.node?.sourceUrl"
+                            [src]="child.node['datamenuitem'].image.node.sourceUrl"
+                            [alt]="child.node.label"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
                         </div>
-                      </div>
-                      <span class="text-gray-700 font-medium group-hover:text-gray-900">{{ child.node.label }}</span>
-                    </a>
-                  </ng-container>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">{{ child.node.label }}</span>
+                      </a>
+                    </ng-container>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
+
+              <ng-template #simpleLink>
+                <a
+                  [routerLink]="item.node.uri"
+                  class="inline-flex items-center px-3 py-2"
+                  [ngClass]="{
+                    'text-white': !scrolled,
+                    'text-gray-700': scrolled
+                  }"
+                  (click)="openMegaMenuIndex = null"
+                >
+                  {{ item.node.label }}
+                </a>
+              </ng-template>
             </li>
           </ul>
-              <a routerLink="/about"
-      class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
-      Voir les produits
-    </a>
+          <div class="flex flex-1 items-center justify-end">
+            <a
+              routerLink="/about"
+              class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+            >
+              Voir les produits
+            </a>
+          </div>
 
           <button
             class="md:hidden focus:outline-none"
@@ -73,7 +96,8 @@ import { MenuItem } from '../../adapters/menu-adapters/menu-adapters';
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
             <svg
               *ngIf="mobileMenuOpen"
@@ -83,7 +107,8 @@ import { MenuItem } from '../../adapters/menu-adapters/menu-adapters';
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
         </div>
@@ -137,9 +162,23 @@ export class HeaderComponent {
   @Input() menu: MenuItem[] = [];
   mobileMenuOpen = false;
   scrolled = false;
+  openMegaMenuIndex: number | null = null;
+
+  constructor(private eRef: ElementRef) { }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.scrolled = window.pageYOffset > 50;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.openMegaMenuIndex = null;
+    }
+  }
+
+  toggleMegaMenu(index: number): void {
+    this.openMegaMenuIndex = this.openMegaMenuIndex === index ? null : index;
   }
 }
