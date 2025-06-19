@@ -3,11 +3,19 @@ import { Title, Meta } from '@angular/platform-browser';
 import { PageService } from '../../services/requests/page';
 import { CommonModule } from '@angular/common';
 import { HeroBackgroundImageComponent } from '../../components/hero/hero-background-image';
+import { ContainersComponent } from '../../components/layouts/containers/containers';
+import { ComponentAdaptersComponent } from '../../components/adapters/component-adapters/component-adapters';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HeroBackgroundImageComponent],
+  imports: [
+    CommonModule,
+    HeroBackgroundImageComponent,
+    ContainersComponent,
+    ComponentAdaptersComponent
+  ],
   templateUrl: './home.html',
   providers: [PageService]
 })

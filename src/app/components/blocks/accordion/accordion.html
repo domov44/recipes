@@ -1,0 +1,29 @@
+<div class="bg-white">
+  <div class="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8">
+    <div class="mx-auto max-w-4xl divide-y divide-gray-900/10">
+      <div class="txt-group" [innerHTML]="text"></div>
+      <dl class="mt-10 space-y-6 divide-y divide-gray-900/10">
+        <div *ngFor="let item of accordion; let i = index" class="pt-6">
+          <dt>
+            <button (click)="toggle(i)" class="flex w-full items-start justify-between text-left text-gray-900">
+              <span class="text-base font-semibold leading-7">{{ item.label }}</span>
+              <span class="ml-6 flex h-7 items-center">
+                <svg [ngClass]="{
+                    'rotate-180': openIndex === i,
+                    'rotate-0': openIndex !== i
+                  }" class="h-6 w-6 transform transition-transform duration-200 ease-in-out" fill="none"
+                  stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
+          </dt>
+          <dd *ngIf="openIndex === i" class="mt-2 pr-12">
+            <p class="text-base leading-7 text-gray-600">{{ item.text }}</p>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>

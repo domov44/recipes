@@ -1,0 +1,19 @@
+<ng-container [ngSwitch]="typename">
+  <app-section-image-text *ngSwitchCase="'BlocksContentSectionImageTexteLayout'" [text]="data.text" [image]="data.image"
+    [direction]="data.direction">
+  </app-section-image-text>
+
+  <app-list-postypes *ngSwitchCase="'BlocksContentRelationListsLayout'" [text]="data.text"
+    [postypes]="data.postType?.nodes">
+  </app-list-postypes>
+
+  <app-list-features *ngSwitchCase="'BlocksContentFeaturesListsLayout'" [text]="data.text" [listImage]="data.listImage"
+    [listText]="data.listText" [direction]="data.direction">
+  </app-list-features>
+
+  <app-section-text *ngSwitchCase="'BlocksContentSectionTextLayout'" [text]="data.text">
+  </app-section-text>
+
+  <app-accordion *ngSwitchCase="'BlocksContentSectionAccordionLayout'" [text]="data.text" [accordion]="data.accordion">
+  </app-accordion>
+</ng-container>

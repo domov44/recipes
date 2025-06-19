@@ -3,3 +3,8 @@
 <app-hero-background-image *ngIf="page" [title]="page.title" [description]="page.datapage?.description"
   [link]="page.datapage?.link" [featuredImage]="page.featuredImage">
 </app-hero-background-image>
+
+<app-container *ngIf="page">
+  <app-component-adapter *ngFor="let block of page.blocks.content" [data]="block" [typename]="block.__typename">
+  </app-component-adapter>
+</app-container>
