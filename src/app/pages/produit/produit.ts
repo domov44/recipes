@@ -28,7 +28,6 @@ export class Produit implements OnInit {
   loadPage() {
     this.productService.getProductAndMoreProducts(this.slug, false, null)
       .then(data => {
-        console.log(data)
         this.page = data?.product;
         this.cdr.detectChanges();
       })
