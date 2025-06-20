@@ -21,10 +21,11 @@ export class Produit implements OnInit {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.slug = this.route.snapshot.paramMap.get('slug') || '';
-    this.loadPage();
+    this.route.data.subscribe(data => {
+      this.page = data['productData']?.product;
+      this.cdr.detectChanges();
+    });
   }
-
   loadPage() {
     this.productService.getProductAndMoreProducts(this.slug, false, null)
       .then(data => {
