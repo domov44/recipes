@@ -27,7 +27,6 @@ export class DefaultLayoutComponent implements OnInit {
       const rawMenu = await this.menuService.getHeader();
       this.menu = buildMenuStructure({ menu: { menuItems: rawMenu.menuItems } });
       this.logoUrl = rawMenu.datamenu?.logo?.node?.sourceUrl || '';
-      console.log(this.logoUrl)
       this.cdr.detectChanges();
     } catch (err) {
       console.error('Erreur de chargement du menu:', err);
