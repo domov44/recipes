@@ -8,7 +8,10 @@ export class ProductResolver implements Resolve<any> {
 
   resolve(route: ActivatedRouteSnapshot) {
     const slug = route.paramMap.get('slug')!;
-    console.log('Resolver called for slug:', slug);
-    return this.productService.getProductAndMoreProducts(slug, false, null);
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.productService.getProductAndMoreProducts(slug, false, null).then(resolve);
+      }, 2000);
+    });
   }
 }
