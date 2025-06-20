@@ -18,8 +18,7 @@ export const routes: Routes = [
       },
       {
         path: 'produit/:slug',
-        loadComponent: () => import('./pages/produit/produit').then(m => m.Produit),
-        data: { renderMode: 'client-side' }
+        loadComponent: () => import('./pages/produit/produit').then(m => m.Produit)
       }
     ]
   }
