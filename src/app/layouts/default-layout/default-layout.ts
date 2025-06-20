@@ -10,7 +10,7 @@ import { buildMenuStructure, MenuItem } from '../../components/adapters/menu-ada
   standalone: true,
   imports: [CommonModule, RouterOutlet, HeaderComponent],
   template: `
-    <app-header [menu]="menu"></app-header>
+    <app-header [menu]="menu" [logoUrl]="logoUrl"></app-header>
     <main class="min-h-screen">
       <router-outlet></router-outlet>
     </main>
@@ -18,6 +18,7 @@ import { buildMenuStructure, MenuItem } from '../../components/adapters/menu-ada
 })
 export class DefaultLayoutComponent implements OnInit {
   menu: MenuItem[] = [];
+  logoUrl: string = '';
 
   constructor(private menuService: MenuService, private cdr: ChangeDetectorRef) { }
 
@@ -25,6 +26,8 @@ export class DefaultLayoutComponent implements OnInit {
     try {
       const rawMenu = await this.menuService.getHeader();
       this.menu = buildMenuStructure({ menu: { menuItems: rawMenu.menuItems } });
+      this.logoUrl = rawMenu.datamenu?.logo?.node?.sourceUrl || '';
+      console.log(this.logoUrl)
       this.cdr.detectChanges();
     } catch (err) {
       console.error('Erreur de chargement du menu:', err);

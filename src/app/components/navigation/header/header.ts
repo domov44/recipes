@@ -17,7 +17,7 @@ import { MenuItem } from '../../adapters/menu-adapters/menu-adapters';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="hidden lg:flex lg:flex-1 lg:items-center font-bold text-xl" [class.text-white]="!scrolled" [class.text-gray-800]="scrolled">
-            <img class="w-48" src="https://www.api.masseur-electrique.fr/wp-content/uploads/2025/06/logo-masseur-electrique.png" alt="logo de masseur électrique">
+            <img class="w-48" [src]="logoUrl" alt="logo de masseur électrique">
           </div>
           <ul class="hidden md:flex space-x-8">
             <li *ngFor="let item of menu; let i = index" [ngClass]="{ 'border-b-2 border-indigo-600': openMegaMenuIndex === i }">
@@ -160,6 +160,7 @@ import { MenuItem } from '../../adapters/menu-adapters/menu-adapters';
 })
 export class HeaderComponent {
   @Input() menu: MenuItem[] = [];
+  @Input() logoUrl: string = '';
   mobileMenuOpen = false;
   scrolled = false;
   openMegaMenuIndex: number | null = null;
