@@ -216,10 +216,8 @@ export class ProductService {
       }
     `,
       {
-        variables: {
-          id: isDraft ? productPreview.id : slug,
-          idType: isDraft ? 'DATABASE_ID' : 'SLUG'
-        }
+        id: isDraft ? productPreview.id : slug,
+        idType: isDraft ? 'DATABASE_ID' : 'SLUG'
       }
     );
 
