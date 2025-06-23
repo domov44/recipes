@@ -20,8 +20,15 @@ export const routes: Routes = [
       {
         path: 'produit/:slug',
         loadComponent: () => import('./pages/produit/produit').then(m => m.Produit),
-        resolve: { productData: ProductResolver }
+        resolve: { productData: ProductResolver },
+        // Important pour SSR : s'assurer que la route est bien reconnue
+        runGuardsAndResolvers: 'always'
       }
     ]
+  },
+  // Route catch-all pour gérer les 404
+  {
+    path: '**',
+    redirectTo: '/'
   }
 ];

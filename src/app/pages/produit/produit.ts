@@ -1,42 +1,33 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductService } from '../../services/requests/product';
 import { HeroProductComponent } from '../../components/hero/product-hero';
 import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-produit',
   standalone: true,
   templateUrl: './produit.html',
-  imports: [HeroProductComponent, CommonModule],
-  providers: [ProductService]
+  imports: [HeroProductComponent, CommonModule]
 })
-export class Produit implements OnInit {
+export class Produit implements OnInit, OnDestroy {
   page: any = null;
-  error: string | null = null;
-  slug = '';
-  private productService = inject(ProductService);
-  private cdr = inject(ChangeDetectorRef);
-
-  constructor(private route: ActivatedRoute) { }
+  private route = inject(ActivatedRoute);
+  private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.page = data['productData']?.product;
-      this.cdr.detectChanges();
+    // Récupérer les données du resolver
+    this.route.data.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(data => {
+      if (data['productData']) {
+        this.page = data['productData'].product;
+      }
     });
   }
 
-  loadPage() {
-    this.productService.getProductAndMoreProducts(this.slug, false, null)
-      .then(data => {
-        this.page = data?.product;
-        this.cdr.detectChanges();
-      })
-      .catch(e => {
-        this.error = 'Erreur de chargement';
-        this.cdr.detectChanges();
-        console.error(e);
-      });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
