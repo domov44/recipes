@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "npm run serve:ssr:angular-ssr",
-    "build": "ng build --output-path=dist",
+    "build": "ng build",
+    "vercel-build": "ng build && node dist/compet/server/server.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:angular-ssr": "node dist/server/server.mjs"
+    "serve:ssr:angular-ssr": "node dist/compet/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "@angular/router": "^20.0.0",
     "@angular/ssr": "^20.0.2",
     "express": "^5.1.0",
+    "path": "^0.12.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
