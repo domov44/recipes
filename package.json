@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "npm run serve:ssr:angular-ssr",
+    "dev": "ng serve",
     "build": "ng build",
     "vercel-build": "ng build && node dist/compet/server/server.mjs",
     "watch": "ng build --watch --configuration development",

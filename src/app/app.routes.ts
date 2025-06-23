@@ -11,16 +11,19 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: Home
+        component: Home,
+        data: { headerVariant: 'transparent' }
       },
       {
         path: 'about',
-        component: About
+        component: About,
+        data: { headerVariant: 'opaque' }
       },
       {
         path: 'produit/:slug',
         loadComponent: () => import('./pages/produit/produit').then(m => m.Produit),
-        resolve: { productData: ProductResolver }
+        resolve: { productData: ProductResolver },
+        data: { headerVariant: 'opaque' }
       }
     ]
   }

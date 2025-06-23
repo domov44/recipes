@@ -4,12 +4,14 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ProductService } from '../../services/requests/product';
 import { HeroProductComponent } from '../../components/hero/product-hero';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { ContainersComponent } from '../../components/layouts/containers/containers';
+import { ComponentAdaptersComponent } from '../../components/adapters/component-adapters/component-adapters';
 
 @Component({
   selector: 'app-produit',
   standalone: true,
   templateUrl: './produit.html',
-  imports: [HeroProductComponent, CommonModule],
+  imports: [HeroProductComponent, CommonModule, ContainersComponent, ComponentAdaptersComponent],
   providers: [ProductService]
 })
 export class Produit implements OnInit {
