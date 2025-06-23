@@ -167,6 +167,7 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
+    if (typeof window === 'undefined') return;
     this.scrolled = window.pageYOffset > 50;
   }
 

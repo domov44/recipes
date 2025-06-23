@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd, RouterOutlet } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { filter, map, startWith } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 import { HeaderComponent } from '../../components/navigation/header/header';
 import { MenuService } from '../../services/requests/menu/queries';
@@ -13,11 +13,14 @@ import { buildMenuStructure, MenuItem } from '../../components/adapters/menu-ada
   standalone: true,
   imports: [CommonModule, RouterOutlet, HeaderComponent],
   template: `
-    <app-header
-      [menu]="menu"
-      [logoUrl]="logoUrl"
-      [variant]="(headerVariant$ | async) || 'default'">
-    </app-header>
+    <ng-container *ngIf="headerVariant$ | async as headerVariant">
+      <app-header
+        [menu]="menu"
+        [logoUrl]="logoUrl"
+        [variant]="headerVariant">
+      </app-header>
+    </ng-container>
+
     <main class="min-h-screen">
       <router-outlet></router-outlet>
     </main>
@@ -36,14 +39,17 @@ export class DefaultLayoutComponent implements OnInit {
   ) {
     this.headerVariant$ = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
-      map(() => {
-        let current = this.route;
-        while (current.firstChild) {
-          current = current.firstChild;
-        }
-        return current.snapshot.data['headerVariant'] || 'default';
-      })
+      startWith(null), // ← Force l’exécution initiale
+      map(() => this.extractHeaderVariant())
     );
+  }
+
+  private extractHeaderVariant(): string {
+    let current = this.route;
+    while (current.firstChild) {
+      current = current.firstChild;
+    }
+    return current.snapshot.data?.['headerVariant'] || 'default';
   }
 
   async ngOnInit() {
