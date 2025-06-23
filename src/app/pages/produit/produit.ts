@@ -1,33 +1,46 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ProductService } from '../../services/requests/product';
 import { HeroProductComponent } from '../../components/hero/product-hero';
-import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-produit',
   standalone: true,
   templateUrl: './produit.html',
-  imports: [HeroProductComponent, CommonModule]
+  imports: [HeroProductComponent, CommonModule],
+  providers: [ProductService]
 })
-export class Produit implements OnInit, OnDestroy {
+export class Produit implements OnInit {
   page: any = null;
-  private route = inject(ActivatedRoute);
-  private destroy$ = new Subject<void>();
+  error: string | null = null;
+  slug = '';
+  isBrowser: boolean;
+
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
-    // Récupérer les données du resolver
-    this.route.data.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(data => {
-      if (data['productData']) {
-        this.page = data['productData'].product;
-      }
+    this.route.data.subscribe(data => {
+      this.page = data['productData']?.product;
     });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  loadPage() {
+    if (!this.isBrowser) return;
+
+    this.productService.getProductAndMoreProducts(this.slug, false, null)
+      .then(data => {
+        this.page = data?.product;
+      })
+      .catch(() => {
+        this.error = 'Erreur de chargement';
+      });
   }
 }
