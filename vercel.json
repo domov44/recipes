@@ -1,8 +1,13 @@
 {
+  "functions": {
+    "dist/server/server.mjs": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/render"
     }
   ]
 }
