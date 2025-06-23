@@ -26,4 +26,9 @@ export const routes: Routes = [
       }
     ]
   },
+  // Route catch-all pour gérer les 404
+  {
+    path: '**',
+    redirectTo: '/'
+  }
 ];

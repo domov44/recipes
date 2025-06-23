@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable, of, EMPTY } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ProductService } from '../../services/requests/product';
 
@@ -13,35 +13,23 @@ export class ProductResolver implements Resolve<any> {
     const slug = route.paramMap.get('slug');
 
     if (!slug) {
-      // Rediriger vers la home si pas de slug
       this.router.navigate(['/']);
-      return EMPTY;
+      return from(Promise.resolve(null));
     }
 
-    // Convertir la Promise en Observable pour un meilleur contrôle SSR
-    return new Observable(observer => {
-      this.productService.getProductAndMoreProducts(slug, false, null)
-        .then(data => {
-          if (data?.product) {
-            observer.next(data);
-            observer.complete();
-          } else {
-            // Produit non trouvé, rediriger vers 404 ou home
-            this.router.navigate(['/']);
-            observer.complete();
-          }
-        })
-        .catch(error => {
-          console.error('Erreur lors du chargement du produit:', error);
-          // En cas d'erreur, rediriger vers la home
+    // Convertir la Promise en Observable
+    return from(this.productService.getProductAndMoreProducts(slug, false, null)).pipe(
+      map(data => {
+        if (!data?.product) {
           this.router.navigate(['/']);
-          observer.error(error);
-        });
-    }).pipe(
+          return null;
+        }
+        return data;
+      }),
       catchError(error => {
-        console.error('Erreur resolver:', error);
+        console.error('Erreur lors du chargement du produit:', error);
         this.router.navigate(['/']);
-        return EMPTY;
+        return from(Promise.resolve(null));
       })
     );
   }

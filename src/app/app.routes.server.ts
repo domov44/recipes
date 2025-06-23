@@ -8,4 +8,6 @@ export const serverRoutes: ServerRoute[] = [
   // Routes dynamiques en SSR
   { path: 'produit/**', renderMode: RenderMode.Server },
 
+  // Toutes les autres routes en SSR
+  { path: '**', renderMode: RenderMode.Server }
 ];
